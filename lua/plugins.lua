@@ -34,7 +34,6 @@ return require('packer').startup(function(use)
   }
   use  {
     "nvim-neorg/neorg",
-    branch = "unstable",
     config = function()
         require('neorg').setup {
             load = {
@@ -58,4 +57,18 @@ return require('packer').startup(function(use)
     requires = "nvim-lua/plenary.nvim"
   }
   use 'jbyuki/nabla.nvim'
+  use 'junegunn/goyo.vim'
+  use 'williamboman/nvim-lsp-installer'
+  use {
+      'neoclide/coc.nvim',
+      branch = "release",
+  }
+  use 'gcmt/taboo.vim'
+  use 'lukas-reineke/indent-blankline.nvim'
+  use {
+      "SmiteshP/nvim-gps",
+      requires = "nvim-treesitter/nvim-treesitter"
+  }
+  use 'ChristianChiarulli/nvcode-color-schemes.vim'
+
 end)

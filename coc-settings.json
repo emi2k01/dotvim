@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.assist.importGranularity": "crate",
+    "rust-analyzer.assist.importEnforceGranularity": true,
+    "rust-analyzer.rustfmt.extraArgs": ["+nightly"]
+}

@@ -131,24 +131,24 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
 capabilities = vim.tbl_extend('keep', capabilities, { experimental = { snippetTextEdit = false }})
 
--- local function feedkeys(s)
---   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(s, true, true, true), 'n', true)
--- end
+local function feedkeys(s)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(s, true, true, true), 'n', true)
+end
 
--- function _G.expand_tab()
---     if cmp.visible() then
---         cmp.confirm({ select = true })
---     else
---         if vim.fn["vsnip#jumpable"](1) == 1 then
---             vim.api.nvim_input("<Plug>(vsnip-jump-next)")
---         else
---             feedkeys("<Tab>")
---         end
---     end
---     return ""
--- end
--- 
--- set_keymap("i", "<Tab>", "v:lua.expand_tab()", { silent = true, expr = true })
+function _G.expand_tab()
+    if cmp.visible() then
+        cmp.confirm({ select = true })
+    else
+        if vim.fn["vsnip#jumpable"](1) == 1 then
+            vim.api.nvim_input("<Plug>(vsnip-jump-next)")
+        else
+            feedkeys("<Tab>")
+        end
+    end
+    return ""
+end
+
+set_keymap("i", "<Tab>", "v:lua.expand_tab()", { silent = true, expr = true })
 
 require'lspconfig'.ccls.setup{
     capabilities = capabilities,
@@ -225,8 +225,16 @@ parser_configs.norg = {
     },
 }
 require('nvim-treesitter.configs').setup {
-	ensure_installed = { "norg", "haskell", "cpp", "c", "javascript", "rust" },
+	ensure_installed = { "norg", "haskell", "cpp", "c", "javascript", "rust", "css" },
 }
+
+require("indent_blankline").setup {
+    -- for example, context is off by default, use this to turn it on
+    show_current_context = true,
+    show_current_context_start = false,
+}
+
+require("nvim-gps").setup()
 
 local luadev = require("lua-dev").setup({
     lspconfig = {
@@ -239,3 +247,17 @@ lspconfig.sumneko_lua.setup(luadev)
 lspconfig.html.setup({
     capabilities = capabilities,
 })
+
+local lsp_installer = require("nvim-lsp-installer")
+lsp_installer.on_server_ready(function(server)
+    local opts = { capabilities = capabilities, on_attach = on_attach }
+
+    -- (optional) Customize the options passed to the server
+    -- if server.name == "tsserver" then
+    --     opts.root_dir = function() ... end
+    -- end
+
+    -- This setup() function is exactly the same as lspconfig's setup function.
+    -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+    server:setup(opts)
+end)
