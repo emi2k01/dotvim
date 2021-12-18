@@ -176,3 +176,11 @@ colorscheme nvcode
 
 set sessionoptions+=tabpages,globals
 
+let g:startify_lists = [
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
+let g:startify_custom_header = ""
+

@@ -137,21 +137,6 @@ local function feedkeys(s)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(s, true, true, true), 'n', true)
 end
 
-function _G.expand_tab()
-    if cmp.visible() then
-        cmp.confirm({ select = true })
-    else
-        if vim.fn["vsnip#jumpable"](1) == 1 then
-            vim.api.nvim_input("<Plug>(vsnip-jump-next)")
-        else
-            feedkeys("<Tab>")
-        end
-    end
-    return ""
-end
-
--- set_keymap("i", "<Tab>", "v:lua.expand_tab()", { silent = true, expr = true })
-
 require'lspconfig'.ccls.setup{
     capabilities = capabilities,
     on_attach = on_attach,
