@@ -59,10 +59,10 @@ return require('packer').startup(function(use)
   use 'jbyuki/nabla.nvim'
   use 'junegunn/goyo.vim'
   use 'williamboman/nvim-lsp-installer'
-  use {
-      'neoclide/coc.nvim',
-      branch = "release",
-  }
+  -- use {
+  --     'neoclide/coc.nvim',
+  --     branch = "release",
+  -- }
   use 'gcmt/taboo.vim'
   use 'lukas-reineke/indent-blankline.nvim'
   use {

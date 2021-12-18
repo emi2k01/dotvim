@@ -62,9 +62,11 @@ cmp.setup({
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
-        ['<Tab>'] = function(fallback)
+        ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
-                cmp.confirm({ select = true})
+                print("a")
+                cmp.confirm({ select = true })
+                print("b")
             else
                 if vim.fn["vsnip#jumpable"](1) == 1 then
                     vim.api.nvim_input("<Plug>(vsnip-jump-next)")
@@ -72,7 +74,7 @@ cmp.setup({
                     fallback()
                 end
             end
-        end
+        end)
     },
     sources = {
         { name = 'nvim_lsp' },
@@ -148,7 +150,7 @@ function _G.expand_tab()
     return ""
 end
 
-set_keymap("i", "<Tab>", "v:lua.expand_tab()", { silent = true, expr = true })
+-- set_keymap("i", "<Tab>", "v:lua.expand_tab()", { silent = true, expr = true })
 
 require'lspconfig'.ccls.setup{
     capabilities = capabilities,
