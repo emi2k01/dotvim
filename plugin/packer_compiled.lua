@@ -114,11 +114,6 @@ _G.packer_plugins = {
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/lsp-status.nvim",
     url = "https://github.com/nvim-lua/lsp-status.nvim"
   },
-  ["lsp_signature.nvim"] = {
-    loaded = true,
-    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim",
-    url = "https://github.com/ray-x/lsp_signature.nvim"
-  },
   ["lspsaga.nvim"] = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/lspsaga.nvim",
@@ -145,11 +140,6 @@ _G.packer_plugins = {
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/nerdtree",
     url = "https://github.com/preservim/nerdtree"
   },
-  ["nord-vim"] = {
-    loaded = true,
-    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/nord-vim",
-    url = "https://github.com/emi2k01/nord-vim"
-  },
   ["nvcode-color-schemes.vim"] = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/nvcode-color-schemes.vim",
@@ -159,6 +149,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
+  },
+  ["nvim-dap"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/nvim-dap",
+    url = "https://github.com/mfussenegger/nvim-dap"
   },
   ["nvim-gps"] = {
     loaded = true,
@@ -195,6 +190,11 @@ _G.packer_plugins = {
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
     url = "https://github.com/simrat39/rust-tools.nvim"
   },
+  ["rust.vim"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/rust.vim",
+    url = "https://github.com/rust-lang/rust.vim"
+  },
   ["symbols-outline.nvim"] = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim",
@@ -210,15 +210,35 @@ _G.packer_plugins = {
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["vim-crates"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-crates",
+    url = "https://github.com/mhinz/vim-crates"
+  },
   ["vim-fugitive"] = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
   },
+  ["vim-jsx-pretty"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-jsx-pretty",
+    url = "https://github.com/MaxMEllon/vim-jsx-pretty"
+  },
+  ["vim-sleuth"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-sleuth",
+    url = "https://github.com/tpope/vim-sleuth"
+  },
   ["vim-startify"] = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-startify",
     url = "https://github.com/mhinz/vim-startify"
+  },
+  ["vim-styled-components"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vim-styled-components",
+    url = "https://github.com/styled-components/vim-styled-components"
   },
   ["vim-textobj-user"] = {
     loaded = true,
@@ -244,6 +264,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/vimpeccable",
     url = "https://github.com/svermeulen/vimpeccable"
+  },
+  ["which-key.nvim"] = {
+    loaded = true,
+    path = "/home/emi2k01/.local/share/nvim/site/pack/packer/start/which-key.nvim",
+    url = "https://github.com/folke/which-key.nvim"
   }
 }
 

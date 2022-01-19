@@ -10,7 +10,6 @@ return require('packer').startup(function(use)
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
-  use 'emi2k01/nord-vim'
   use 'neovim/nvim-lspconfig'
   use 'preservim/nerdtree'
   use 'tpope/vim-fugitive'
@@ -70,5 +69,12 @@ return require('packer').startup(function(use)
       requires = "nvim-treesitter/nvim-treesitter"
   }
   use 'ChristianChiarulli/nvcode-color-schemes.vim'
+  use 'rust-lang/rust.vim'
+  use 'mhinz/vim-crates'
+  use "folke/which-key.nvim"
+  use 'mfussenegger/nvim-dap'
+  use 'tpope/vim-sleuth'
+  use 'MaxMEllon/vim-jsx-pretty'
+  use 'styled-components/vim-styled-components'
 
 end)

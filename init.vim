@@ -15,12 +15,13 @@ endfunction
 nmap <leader>T <cmd>NERDTreeToggle<CR>
 nmap <leader>so <cmd>SymbolsOutline<CR>
 imap <expr> <C-Space> compe#complete()
-au BufWinEnter * normal zR
+"au BufWinEnter * normal zR
 au FileType norg setlocal comments-=mb:*
 
 nmap <leader>C <cmd>Telescope commands<CR>
 
 nmap <leader>O <cmd>Telescope lsp_document_symbols<CR>
+nmap <leader>S <cmd>Telescope lsp_dynamic_workspace_symbols<CR>
 
 set signcolumn=number
 
@@ -184,3 +185,10 @@ let g:startify_lists = [
 
 let g:startify_custom_header = ""
 
+let g:NERDTreeUseTCD = 1
+
+autocmd BufWinEnter * silent! :%foldopen!
+
+hi Normal guibg='#0e0f12'
+
+au BufNewFile,BufRead *.html set filetype=htmldjango
