@@ -33,7 +33,7 @@ vim.bo.tabstop = vim.o.tabstop
 vim.bo.formatoptions = vim.o.formatoptions
 
 vim.wo.signcolumn = "yes"
-vim.wo.foldmethod = "expr"
+vim.wo.foldmethod = "indent"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.wo.number = true
 vim.wo.list = true
@@ -52,6 +52,9 @@ local cmp = require'cmp'
 require('lspsaga').init_lsp_saga()
 
 cmp.setup({
+    completion = {
+        autocomplete = false,
+    },
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
@@ -64,9 +67,7 @@ cmp.setup({
         ['<C-e>'] = cmp.mapping.close(),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
-                print("a")
                 cmp.confirm({ select = true })
-                print("b")
             else
                 if vim.fn["vsnip#jumpable"](1) == 1 then
                     vim.api.nvim_input("<Plug>(vsnip-jump-next)")
@@ -101,8 +102,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', "<Cmd>Telescope lsp_definitions<CR>", opts)
   buf_set_keymap('n', 'gi', '<cmd>Telescope lsp_implementations<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>Telescope lsp_references<CR>', opts)
-  buf_set_keymap('n', '<leader>sd', "<Cmd>Telescope lsp_document_diagnostics<CR>", opts)
-  buf_set_keymap('n', '<leader>sD', "<Cmd>Telescope lsp_workspace_diagnostics<CR>", opts)
+  buf_set_keymap('n', '<leader>d', "<Cmd>Telescope diagnostics bufnr=0<CR>", opts)
+  buf_set_keymap('n', '<leader>D', "<Cmd>Telescope diagnostics<CR>", opts)
   buf_set_keymap('n', '<leader>pd', "<Cmd>lua require'lspsaga.provider'.preview_definition()<CR>", opts)
   buf_set_keymap('n', '<leader>aw', "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
   buf_set_keymap('v', '<leader>aw', "<cmd>lua vim.lsp.buf.range_code_action()<CR>", opts)
@@ -110,8 +111,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<C-k>', "<cmd>lua require'lspsaga.signaturehelp'.signature_help()<CR>", opts)
   buf_set_keymap('n', '<leader>rn', "<cmd>lua require'lspsaga.rename'.rename()<CR>", opts)
   buf_set_keymap('n', '<leader>dl', "<cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>", opts)
-  buf_set_keymap('n', '[g', "<cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>", opts)
-  buf_set_keymap('n', ']g', "<cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>", opts)
+  buf_set_keymap('n', '[d', "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
+  buf_set_keymap('n', ']d', "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
 
   buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
@@ -145,6 +146,10 @@ require'lspconfig'.ccls.setup{
     },
 }
 
+local extension_path = '/home/emi2k01/.vscode/extensions/vadimcn.vscode-lldb-1.6.10/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+
 require('rust-tools').setup({
     server = {
         on_attach = on_attach,
@@ -159,10 +164,20 @@ require('rust-tools').setup({
                 },
                 experimental = {
                     procAttrMacros = true
+                },
+                checkOnSave = {
+                    command = "clippy"
+                },
+                rustfmt = {
+                    extraArgs = { "+nightly" }
                 }
             }
         }
-    }
+    },
+    dap = {
+        adapter = require('rust-tools.dap').get_codelldb_adapter(
+            codelldb_path, liblldb_path)
+    },
 })
 
 require('hop').setup({})
@@ -212,7 +227,13 @@ parser_configs.norg = {
     },
 }
 require('nvim-treesitter.configs').setup {
-	ensure_installed = { "norg", "haskell", "cpp", "c", "javascript", "rust", "css" },
+    ensure_installed = { "norg", "haskell", "cpp", "c", "javascript", "rust", "css" },
+    highlight = {
+        enable = true
+    },
+    indent = {
+        enable = true
+    }
 }
 
 require("indent_blankline").setup {
@@ -239,6 +260,15 @@ local lsp_installer = require("nvim-lsp-installer")
 lsp_installer.on_server_ready(function(server)
     local opts = { capabilities = capabilities, on_attach = on_attach }
 
+    if server.name == "tsserver" then
+        opts.init_options = {
+            preferences = {
+                includeCompletionsWithSnippetText = true,
+                includeCompletionsForImportStatements = true,
+            },
+        }
+    end
+
     -- (optional) Customize the options passed to the server
     -- if server.name == "tsserver" then
     --     opts.root_dir = function() ... end
@@ -248,3 +278,206 @@ lsp_installer.on_server_ready(function(server)
     -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     server:setup(opts)
 end)
+
+local dap = require('dap')
+
+local dap = require('dap')
+dap.adapters.codelldb = function(on_adapter)
+  local stdout = vim.loop.new_pipe(false)
+  local stderr = vim.loop.new_pipe(false)
+
+  -- CHANGE THIS!
+  local cmd = '/home/emi2k01/.vscode/extensions/vadimcn.vscode-lldb-1.6.10/adapter/codelldb'
+
+  local handle, pid_or_err
+  local opts = {
+    stdio = {nil, stdout, stderr},
+    detached = true,
+  }
+  handle, pid_or_err = vim.loop.spawn(cmd, opts, function(code)
+    stdout:close()
+    stderr:close()
+    handle:close()
+    if code ~= 0 then
+      print("codelldb exited with code", code)
+    end
+  end)
+  assert(handle, "Error running codelldb: " .. tostring(pid_or_err))
+  stdout:read_start(function(err, chunk)
+    assert(not err, err)
+    if chunk then
+      local port = chunk:match('Listening on port (%d+)')
+      if port then
+        vim.schedule(function()
+          on_adapter({
+            type = 'server',
+            host = '127.0.0.1',
+            port = port
+          })
+        end)
+      else
+        vim.schedule(function()
+          require("dap.repl").append(chunk)
+        end)
+      end
+    end
+  end)
+  stderr:read_start(function(err, chunk)
+    assert(not err, err)
+    if chunk then
+      vim.schedule(function()
+        require("dap.repl").append(chunk)
+      end)
+    end
+  end)
+end
+
+-- dap.adapters.lldb = {
+--   type = 'executable',
+--   command = '/usr/bin/lldb-vscode', -- adjust as needed
+--   name = "lldb"
+-- }
+
+local dap = require('dap')
+-- dap.configurations.cpp = {
+--   {
+--     name = "Launch",
+--     type = "lldb",
+--     request = "launch",
+--     program = function()
+--       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+--     end,
+--     cwd = '${workspaceFolder}',
+--     stopOnEntry = false,
+--     args = {},
+-- 
+--     runInTerminal = false,
+--   },
+-- }
+
+local dap = require('dap')
+dap.configurations.cpp = {
+  {
+    name = "Launch file",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = true,
+  },
+}
+
+
+-- If you want to use this for rust and c, add something like this:
+
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+
+dap.adapters.chrome = {
+    type = "executable",
+    command = "node",
+    args = {os.getenv("HOME") .. "/src/vscode-chrome-debug/out/src/chromeDebug.js"} -- TODO adjust
+}
+
+dap.configurations.javascript = { -- change this to javascript if needed
+    {
+        type = "chrome",
+        request = "attach",
+        program = "${file}",
+        cwd = vim.fn.getcwd(),
+        sourceMaps = true,
+        protocol = "inspector",
+        port = 9222,
+        webRoot = "${workspaceFolder}"
+    }
+}
+
+dap.configurations.typescript = { -- change to typescript if needed
+    {
+        type = "chrome",
+        request = "attach",
+        program = "${file}",
+        cwd = vim.fn.getcwd(),
+        sourceMaps = true,
+        protocol = "inspector",
+        port = 9222,
+        webRoot = "${workspaceFolder}"
+    }
+}
+
+local previewers = require('telescope.previewers')
+local builtin = require('telescope.builtin')
+local conf = require('telescope.config')
+
+local delta = previewers.new_termopen_previewer {
+  get_command = function(entry)
+  if entry.status == '??' or 'A ' then
+      return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value }
+    end
+    return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', entry.current_file }
+  end
+}
+
+my_git_bcommits = function(opts)
+  opts = opts or {}
+  opts.previewer = {
+    delta,
+    previewers.git_commit_message.new(opts),
+    previewers.git_commit_diff_as_was.new(opts),
+  }
+
+  builtin.git_bcommits(opts)
+end
+
+
+my_git_status = function(opts)
+  opts = opts or {}
+  opts.previewer = delta
+
+  builtin.git_status(opts)
+end
+
+local wk = require('which-key')
+
+wk.setup {
+}
+
+wk.register({
+    g = {
+        name = "Git",
+        s = { my_git_status, "Status" }
+    },
+    d = {
+        name = "debug",
+        b = { "<cmd>lua require'dap'.toggle_breakpoint()<CR>", "Set breakpoint" },
+        c = { "<cmd>lua require'dap'.continue()<CR>", "Run/Continue" },
+        o = { "<cmd>lua require'dap'.step_over()<CR>", "Step over" },
+        i = { "<cmd>lua require'dap'.step_into()<CR>", "Step into" },
+        h = { "<cmd>lua require('dap.ui.widgets').hover()<CR>", "Hover value" },
+        f = { function()
+            local widgets = require('dap.ui.widgets')
+            local my_sidebar = widgets.sidebar(widgets.frames)
+            my_sidebar.open()
+        end, "Frames" },
+        s = { function()
+            local widgets = require('dap.ui.widgets')
+            local my_sidebar = widgets.sidebar(widgets.scopes)
+            my_sidebar.open()
+        end, "Scopes" },
+        S = { function()
+            local widgets = require('dap.ui.widgets')
+            local my_sidebar = widgets.sidebar(widgets.scopes)
+            my_sidebar.open()
+        end, "Centered scopes" },
+    },
+    r = {
+        name = "rust",
+        h = { "<cmd>lua require'rust-tools.hover_actions'.hover_actions()<CR>", "Hover actions" },
+        e = { "<cmd>lua require'rust-tools.expand_macro'.expand_macro()<CR>", "Expand macro" },
+        d = { "<cmd>RustDebuggables<CR>", "Debuggables" },
+        r = { "<cmd>RustReloadWorkspace<CR>", "Reload workspace" },
+        p = { "<cmd>RustParentModule<CR>", "Parent module" },
+    }
+}, { prefix = "," })
