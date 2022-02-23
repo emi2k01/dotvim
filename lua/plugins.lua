@@ -74,7 +74,8 @@ return require('packer').startup(function(use)
   use "folke/which-key.nvim"
   use 'mfussenegger/nvim-dap'
   use 'tpope/vim-sleuth'
+  use 'yuezk/vim-js'
   use 'MaxMEllon/vim-jsx-pretty'
-  use 'styled-components/vim-styled-components'
+  use 'Shatur/neovim-ayu'
 
 end)

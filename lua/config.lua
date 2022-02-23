@@ -1,7 +1,6 @@
 require('plugins')
 
 vim.g.mapleader = " "
-vim.api.nvim_command("colorscheme nord")
 
 vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.termguicolors = true
@@ -231,9 +230,6 @@ require('nvim-treesitter.configs').setup {
     highlight = {
         enable = true
     },
-    indent = {
-        enable = true
-    }
 }
 
 require("indent_blankline").setup {

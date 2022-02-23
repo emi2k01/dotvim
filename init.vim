@@ -192,3 +192,8 @@ autocmd BufWinEnter * silent! :%foldopen!
 hi Normal guibg='#0e0f12'
 
 au BufNewFile,BufRead *.html set filetype=htmldjango
+
+hi Normal guibg=NONE
+
+autocmd BufWinEnter * set autoindent
+autocmd BufWinEnter * set indentexpr=
