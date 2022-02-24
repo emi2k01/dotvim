@@ -2,29 +2,17 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  use 'tami5/lspsaga.nvim'
-  use 'simrat39/symbols-outline.nvim'
-  use 'nvim-lua/lsp-status.nvim'
   use 'itchyny/lightline.vim'
   use {
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
-  use 'neovim/nvim-lspconfig'
   use 'preservim/nerdtree'
   use 'tpope/vim-fugitive'
   use 'phaazon/hop.nvim'
   use 'mattn/emmet-vim'
   use 'kana/vim-textobj-user'
   use 'Julian/vim-textobj-variable-segment'
-  use 'simrat39/rust-tools.nvim'
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/vim-vsnip'
-  use 'hrsh7th/vim-vsnip-integ'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-vsnip'
-  use 'folke/lua-dev.nvim'
   use 'mhinz/vim-startify'
   use 'svermeulen/vimpeccable'
   use {
@@ -57,11 +45,10 @@ return require('packer').startup(function(use)
   }
   use 'jbyuki/nabla.nvim'
   use 'junegunn/goyo.vim'
-  use 'williamboman/nvim-lsp-installer'
-  -- use {
-  --     'neoclide/coc.nvim',
-  --     branch = "release",
-  -- }
+  use {
+      'neoclide/coc.nvim',
+      branch = "release",
+  }
   use 'gcmt/taboo.vim'
   use 'lukas-reineke/indent-blankline.nvim'
   use {
@@ -69,10 +56,8 @@ return require('packer').startup(function(use)
       requires = "nvim-treesitter/nvim-treesitter"
   }
   use 'ChristianChiarulli/nvcode-color-schemes.vim'
-  use 'rust-lang/rust.vim'
   use 'mhinz/vim-crates'
   use "folke/which-key.nvim"
-  use 'mfussenegger/nvim-dap'
   use 'tpope/vim-sleuth'
   use 'yuezk/vim-js'
   use 'MaxMEllon/vim-jsx-pretty'
