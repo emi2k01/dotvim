@@ -33,6 +33,7 @@ return require('packer').startup(function(use)
   }
   use  {
     "nvim-neorg/neorg",
+    tag = "0.0.11",
     config = function()
         require('neorg').setup {
             load = {
@@ -41,13 +42,19 @@ return require('packer').startup(function(use)
                 ["core.norg.dirman"] = { -- Manage your directories with Neorg
                     config = {
                         workspaces = {
-                            my_workspace = "~/.local/share/neorg"
+                            work = "~/notes/work",
+                            self = "~/notes/self"
                         }
                     }
                 },
                 ["core.norg.completion"] = {
                     config = {
                         engine = 'nvim-cmp'
+                    }
+                },
+                ["core.norg.esupports.metagen"] = {
+                    config = {
+                        type = "auto",
                     }
                 }
             },
@@ -77,5 +84,24 @@ return require('packer').startup(function(use)
   use 'yuezk/vim-js'
   use 'MaxMEllon/vim-jsx-pretty'
   use 'Shatur/neovim-ayu'
-
+  use 'rktjmp/lush.nvim'
+  use {
+      'emi2k01/monotone.nvim',
+      branch = "develop"
+  }
+  use "mcchrish/zenbones.nvim"
+  use {
+      "jose-elias-alvarez/null-ls.nvim",
+      requires = { "nvim-lua/plenary.nvim" },
+  }
+  use "danishprakash/vim-yami"
+  use 'EdenEast/nightfox.nvim'
+  use 'sainnhe/edge'
+  use 'tpope/vim-abolish'
+  use 'junegunn/fzf'
+  use 'junegunn/fzf.vim'
+  use 'https://gitlab.com/yorickpeterse/nvim-window.git'
+  use 'https://gitlab.com/yorickpeterse/vim-paper'
+  use 'huyvohcmc/atlas.vim'
+  use 'shaunsingh/nord.nvim'
 end)

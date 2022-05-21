@@ -12,9 +12,13 @@ function! LspStatus() abort
   return ''
 endfunction
 
+nmap <leader>R <cmd>Rg<CR>
+nmap ,L <cmd>Lines<CR>
+nmap <leader>U <cmd>Lines<CR>
 nmap <leader>T <cmd>NERDTreeToggle<CR>
 nmap <leader>so <cmd>SymbolsOutline<CR>
 imap <expr> <C-Space> compe#complete()
+nmap <silent> E ge
 "au BufWinEnter * normal zR
 au FileType norg setlocal comments-=mb:*
 
@@ -23,7 +27,7 @@ nmap <leader>C <cmd>Telescope commands<CR>
 nmap <leader>O <cmd>Telescope lsp_document_symbols<CR>
 nmap <leader>S <cmd>Telescope lsp_dynamic_workspace_symbols<CR>
 
-set signcolumn=number
+set signcolumn=yes:1
 
 " " Use tab for trigger completion with characters ahead and navigate.
 " " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -170,10 +174,10 @@ let g:lightline = {
 \   'lspstatus': 'LspStatus',
 \   'nvimgps': 'NvimGps'
 \ },
+\ 'colorscheme': 'nord'
       \ }
 
 
-colorscheme nvcode
 
 set sessionoptions+=tabpages,globals
 
@@ -189,11 +193,17 @@ let g:NERDTreeUseTCD = 1
 
 autocmd BufWinEnter * silent! :%foldopen!
 
-hi Normal guibg='#0e0f12'
-
 au BufNewFile,BufRead *.html set filetype=htmldjango
-
-hi Normal guibg=NONE
 
 autocmd BufWinEnter * set autoindent
 autocmd BufWinEnter * set indentexpr=
+autocmd BufWinEnter * set nocindent
+
+set background=dark
+colorscheme nord
+hi Normal guibg=NONE
+hi WindowSwitch guibg='#434343' guifg='#EEEEEE'
+
+nmap - <cmd>lua require('nvim-window').pick()<CR>
+
+let g:startify_session_before_save = [ 'silent! tabdo NERDTreeClose' ]

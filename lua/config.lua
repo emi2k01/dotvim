@@ -44,6 +44,10 @@ vim.wo.colorcolumn = "110"
 vim.g.NERDTreeUseTcd = 1
 vim.g.startify_session_persistence = 1
 
+require('nvim-window').setup({
+    normal_hl = 'WindowSwitch',
+})
+
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
@@ -51,9 +55,6 @@ local cmp = require'cmp'
 require('lspsaga').init_lsp_saga()
 
 cmp.setup({
-    completion = {
-        autocomplete = false,
-    },
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
@@ -119,6 +120,14 @@ local on_attach = function(client, bufnr)
   buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
 end
+
+require("null-ls").setup({
+    sources = {
+        require("null-ls").builtins.formatting.prettier,
+        require("null-ls").builtins.diagnostics.eslint,
+    },
+    on_attach = on_attach,
+})
 
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -189,9 +198,6 @@ local pickers = require('telescope.builtin')
 vimp.nnoremap('<leader>F', function()
     pickers.find_files()
 end)
-vimp.nnoremap('<leader>R', function()
-    pickers.live_grep()
-end)
 vimp.nnoremap('<leader>B', function()
     pickers.buffers()
 end)
@@ -227,9 +233,6 @@ parser_configs.norg = {
 }
 require('nvim-treesitter.configs').setup {
     ensure_installed = { "norg", "haskell", "cpp", "c", "javascript", "rust", "css" },
-    highlight = {
-        enable = true
-    },
 }
 
 require("indent_blankline").setup {
